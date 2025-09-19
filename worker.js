@@ -15,11 +15,28 @@ async function handleRequest(request) {
           });
       }
 
+
+
       // 从请求路径中提取目标 URL
       let actualUrlStr = decodeURIComponent(url.pathname.replace("/", ""));
 
       // 判断用户输入的 URL 是否带有协议
       actualUrlStr = ensureProtocol(actualUrlStr, url.protocol);
+
+              // 白名单中的网站
+      const whitelist = ['example.com', 'another-example.com'];
+    
+      const targetUrl = new URL(actualUrlStr);
+
+      if (!whitelist.includes(targetUrl.hostname)) {
+          return new Response('This site is not allowed.', {
+              status: 403,
+              statusText: 'Forbidden',
+              headers: {
+                  'Content-Type': 'text/plain; charset=utf-8'
+              }
+          });
+      }
 
       // 保留查询参数
       actualUrlStr += url.search;
